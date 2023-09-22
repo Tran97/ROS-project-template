@@ -65,7 +65,7 @@ services:
         - USERNAME=${USERNAME:-devuser}
     volumes:
       # Mount the source code
-      - ./tranbot_autonomy:/overlay_ws/src/tranbot_autonomy:rw
+      - ./tranbot_mk1:/overlay_ws/src/tranbot_mk1:rw
       # - ./tb3_worlds:/overlay_ws/src/tb3_worlds:rw
       # Mount colcon build artifacts for faster rebuilds
       - ./.colcon/build/:/overlay_ws/build/:rw

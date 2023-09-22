@@ -5,13 +5,16 @@ ARG ROS_DISTRO=humble
 # Base Image for TurtleBot3 Simulation #
 ###############################################################################################
 
-FROM osrf/ros:${ROS_DISTRO}-desktop as base
+FROM osrf/ros:${ROS_DISTRO}-desktop-full as base
 ENV ROS_DISTRO=${ROS_DISTRO}
 SHELL ["/bin/bash", "-c"]
 
 # Install basic apt packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git vim iputils-ping python3-pip ros-${ROS_DISTRO}-xacro
+    git vim iputils-ping python3-pip ros-${ROS_DISTRO}-xacro \
+    # ros-${ROS_DISTRO}-gazebo-ros-pkgs joystick jstest-gtk evtest \
+    ros-${ROS_DISTRO}-twist-mux ros-${ROS_DISTRO}-ros2-controllers \
+    ros-${ROS_DISTRO}-gazebo-ros2-control ros-humble-slam-toolbox
 #  git libcanberra-gtk-module libcanberra-gtk3-module fuse3 libfuse2 libqt5svg5-dev \
 #  python3-pip python3-opencv python3-tk python3-pyqt5.qtwebengine
 
@@ -83,7 +86,7 @@ ARG GID=${UID}
 
 # Install extra tools for development
 RUN apt-get update && apt-get install -y --no-install-recommends \
- gdb gdbserver nano ros-${ROS_DISTRO}-joint-state-publisher-gui python3-serial
+ gdb gdbserver nano ros-${ROS_DISTRO}-joint-state-publisher-gui python3-serial python3-colcon-clean
 
 # Create new user and home directory
 RUN groupadd --gid $GID $USERNAME \
