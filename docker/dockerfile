@@ -11,7 +11,7 @@ SHELL ["/bin/bash", "-c"]
 
 # Install basic apt packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git vim iputils-ping  python3-pip
+    git vim iputils-ping python3-pip ros-${ROS_DISTRO}-xacro
 #  git libcanberra-gtk-module libcanberra-gtk3-module fuse3 libfuse2 libqt5svg5-dev \
 #  python3-pip python3-opencv python3-tk python3-pyqt5.qtwebengine
 
@@ -83,7 +83,7 @@ ARG GID=${UID}
 
 # Install extra tools for development
 RUN apt-get update && apt-get install -y --no-install-recommends \
- gdb gdbserver nano
+ gdb gdbserver nano ros-${ROS_DISTRO}-joint-state-publisher-gui python3-serial
 
 # Create new user and home directory
 RUN groupadd --gid $GID $USERNAME \
