@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git vim iputils-ping python3-pip ros-${ROS_DISTRO}-xacro \
     ros-${ROS_DISTRO}-twist-mux ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-gazebo-ros2-control ros-humble-slam-toolbox \
-    ros-${ROS_DISTRO}-ros2-control ros-${ROS_DISTRO}-gazebo-ros-pkgs
+    ros-${ROS_DISTRO}-ros2-control ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    ros-${ROS_DISTRO}-navigation2 ros-${ROS_DISTRO}-nav2-bringup ros-${ROS_DISTRO}-turtlebot3*  
     #joystick jstest-gtk evtest \
 
 # Use Cyclone DDS as middleware
