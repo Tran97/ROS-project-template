@@ -1,16 +1,3 @@
-# Docker Compose file for TurtleBot3 Behavior Examples
-#
-# Usage:
-#
-# To build the images:
-#   docker compose build
-#
-# To start up a specific service by name:
-#   docker compose up <service_name>
-#
-# To open an interactive shell to a running container:
-#   docker exec -it <container_name> bash
-
 version: "3.9"
 services:
   # Base image containing dependencies.
@@ -31,8 +18,6 @@ services:
     # Needed to display graphical applications
     privileged: True
     environment:
-      # Needed to define a TurtleBot3 model type
-      # - TURTLEBOT3_MODEL=${TURTLEBOT3_MODEL:-waffle_pi}
       # Allows graphical programs in the container.
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -65,8 +50,7 @@ services:
         - USERNAME=${USERNAME:-devuser}
     volumes:
       # Mount the source code
-      - ./tranbot_mk1:/overlay_ws/src/tranbot_mk1:rw
-      # - ./tb3_worlds:/overlay_ws/src/tb3_worlds:rw
+      - ../tranbot_mk1:/overlay_ws/src/tranbot_mk1:rw
       # Mount colcon build artifacts for faster rebuilds
       - ./.colcon/build/:/overlay_ws/build/:rw
       - ./.colcon/install/:/overlay_ws/install/:rw

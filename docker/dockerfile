@@ -2,7 +2,7 @@
 ARG ROS_DISTRO=humble
 
 ###############################################################################################
-# Base Image for TurtleBot3 Simulation #
+# Base Image for #
 ###############################################################################################
 
 FROM osrf/ros:${ROS_DISTRO}-desktop-full as base
@@ -12,15 +12,10 @@ SHELL ["/bin/bash", "-c"]
 # Install basic apt packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git vim iputils-ping python3-pip ros-${ROS_DISTRO}-xacro \
-    # ros-${ROS_DISTRO}-gazebo-ros-pkgs joystick jstest-gtk evtest \
     ros-${ROS_DISTRO}-twist-mux ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-gazebo-ros2-control ros-humble-slam-toolbox \
-    ros-${ROS_DISTRO}-ros2-control
-#  git libcanberra-gtk-module libcanberra-gtk3-module fuse3 libfuse2 libqt5svg5-dev \
-#  python3-pip python3-opencv python3-tk python3-pyqt5.qtwebengine
-
-# Install additional Python modules
-# RUN pip3 install matplotlib transforms3d
+    ros-${ROS_DISTRO}-ros2-control ros-${ROS_DISTRO}-gazebo-ros-pkgs
+    #joystick jstest-gtk evtest \
 
 # Use Cyclone DDS as middleware
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -58,15 +53,13 @@ COPY ./docker/entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 ###############################################################################################
-# Overlay Image for TurtleBot3 Simulation #
+# Overlay Image #
 ###############################################################################################
 FROM base AS overlay
 
 # Create an overlay Colcon workspace
 RUN mkdir -p /overlay_ws/src
 WORKDIR /overlay_ws
-# COPY ./tb3_autonomy/ ./src/tb3_autonomy/
-# COPY ./tb3_worlds/ ./src/tb3_worlds/
 RUN source /tranbot_ws/install/setup.bash \
  && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
  && colcon build --symlink-install
