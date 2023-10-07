@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-navigation2 ros-${ROS_DISTRO}-nav2-bringup ros-${ROS_DISTRO}-turtlebot3*  
     #joystick jstest-gtk evtest \
 
+# Install additional Python modules
+RUN pip3 install matplotlib transforms3d
+
 # Use Cyclone DDS as middleware
 RUN apt-get update && apt-get install -y --no-install-recommends \
  ros-${ROS_DISTRO}-rmw-cyclonedds-cpp
@@ -61,6 +64,7 @@ FROM base AS overlay
 # Create an overlay Colcon workspace
 RUN mkdir -p /overlay_ws/src
 WORKDIR /overlay_ws
+COPY ./tranbot_mk1/ ./src/tranbot_mk1/
 RUN source /tranbot_ws/install/setup.bash \
  && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
  && colcon build --symlink-install
