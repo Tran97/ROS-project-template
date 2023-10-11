@@ -2,7 +2,7 @@ version: "3.9"
 services:
   # Base image containing dependencies.
   base:
-    image: tranbot:base
+    image: ${PROJECT_NAME}:base
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -30,7 +30,7 @@ services:
   # Overlay image containing the example source code.
   overlay:
     extends: base
-    image: tranbot:overlay
+    image: ${PROJECT_NAME}:overlay
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -39,7 +39,7 @@ services:
   # Developer container
   dev:
     extends: overlay
-    image: tranbot:dev
+    image: ${PROJECT_NAME}:dev
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -58,31 +58,13 @@ services:
     user: ${USERNAME:-devuser}
     command: sleep infinity
 
-  # Runs basic TurtleBot3 simulation
-  sim:
-     extends: dev
-     command: ros2 launch tranbot_worlds tranbot_world.launch.py
+  ## Runs basic simulation
+  #sim:
+     #extends: dev
+     #command: ros2 launch tranbot_worlds tranbot_world.launch.py
 
-  # Demo world
-  demo-world:
-     extends: dev 
-     command: ros2 launch tranbot_spinup sim.launch.py
+  ## Demo world
+  #demo-world:
+     #extends: dev 
+     #command: ros2 launch tranbot_spinup sim.launch.py
     
-
-  # # Behavior demo using Python and py_trees
-  # demo-behavior-py:
-  #   extends: overlay
-  #   command: >
-  #     ros2 launch tb3_autonomy tb3_demo_behavior_py.launch.py
-  #     tree_type:=${BT_TYPE:?}
-  #     enable_vision:=${ENABLE_VISION:?}
-  #     target_color:=${TARGET_COLOR:?}
-
-  # # Behavior demo using C++ and BehaviorTree.CPP
-  # demo-behavior-cpp:
-  #   extends: overlay
-  #   command: >
-  #     ros2 launch tb3_autonomy tb3_demo_behavior_cpp.launch.py
-  #     tree_type:=${BT_TYPE:?}
-  #     enable_vision:=${ENABLE_VISION:?}
-  #     target_color:=${TARGET_COLOR:?}

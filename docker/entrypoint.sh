@@ -6,11 +6,11 @@ source /opt/ros/${ROS_DISTRO}/setup.bash
 echo "Sourced ROS 2 ${ROS_DISTRO}"
 
 # Source the base workspace, if built
-if [ -f /tranbot_ws/install/setup.bash ]
+if [ -f /underlay_ws/install/setup.bash ]
 then
-  source /tranbot_ws/install/setup.bash
+  source /underlay_ws/install/setup.bash
   # export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(ros2 pkg prefix turtlebot3_gazebo)/share/turtlebot3_gazebo/models
-  echo "Sourced TranBot base workspace"
+  echo "Sourced underlay workspace"
 fi
 
 # Source the overlay workspace, if built

@@ -27,13 +27,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # Create Colcon workspace with external dependencies
-RUN mkdir -p /tranbot_ws/src
-WORKDIR /tranbot_ws/src
+RUN mkdir -p /underlay_ws/src
+WORKDIR /underlay_ws/src
 COPY dependencies.repos .
 RUN vcs import < dependencies.repos
 
 # Build the base Colcon workspace, installing dependencies first.
-WORKDIR /tranbot_ws
+WORKDIR /underlay_ws
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && apt-get update -y \
  && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
@@ -52,7 +52,7 @@ RUN chmod -R 0700 /tmp/runtime-root
 ENV NO_AT_BRIDGE 1
 
 # Set up the entrypoint
-WORKDIR /tranbot_ws
+WORKDIR /underlay_ws
 COPY ./docker/entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
@@ -64,8 +64,8 @@ FROM base AS overlay
 # Create an overlay Colcon workspace
 RUN mkdir -p /overlay_ws/src
 WORKDIR /overlay_ws
-COPY ./tranbot_mk1/ ./src/tranbot_mk1/
-RUN source /tranbot_ws/install/setup.bash \
+#COPY ./tranbot_mk1/ ./src/tranbot_mk1/
+RUN source /underlay_ws/install/setup.bash \
  && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y \
  && colcon build --symlink-install
 
