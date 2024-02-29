@@ -5,7 +5,7 @@ services:
     image: ${PROJECT_NAME}:base
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       args:
         ROS_DISTRO: humble
       target: base
@@ -16,7 +16,6 @@ services:
     network_mode: host
     ipc: host
     # Needed to display graphical applications
-    privileged: True
     environment:
       # Allows graphical programs in the container.
       - DISPLAY=${DISPLAY}
@@ -26,6 +25,13 @@ services:
       # Allows graphical programs in the container.
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   # Overlay image containing the example source code.
   overlay:
@@ -33,7 +39,7 @@ services:
     image: ${PROJECT_NAME}:overlay
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       target: overlay
 
   # Developer container
@@ -42,29 +48,20 @@ services:
     image: ${PROJECT_NAME}:dev
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       target: dev
       args:
         - UID=${UID:-1000}
         - GID=${UID:-1000}
         - USERNAME=${USERNAME:-devuser}
+
     volumes:
       # Mount the source code
-      #- ./tranbot_mk1:/overlay_ws/src/tranbot_mk1:rw
-      # Mount colcon build artifacts for faster rebuilds
-      - ./.colcon/build/:/overlay_ws/build/:rw
-      - ./.colcon/install/:/overlay_ws/install/:rw
-      - ./.colcon/log/:/overlay_ws/log/:rw
+      - ./dev_packages:/overlay_ws/src/:rw 
+
     user: ${USERNAME:-devuser}
-    command: sleep infinity
-
-  ## Runs basic simulation
-  #sim:
-     #extends: dev
-     #command: ros2 launch tranbot_worlds tranbot_world.launch.py
-
-  ## Demo world
-  #demo-world:
-     #extends: dev 
-     #command: ros2 launch tranbot_spinup sim.launch.py
-    
+    command: bash -c "sudo chmod 777 -R /overlay_ws/ && exec sleep infinity"
+  
+  #viz:
+    #extends: dev
+    #command: rviz -d /overlay_ws/src/some_folder/rviz.rviz  
